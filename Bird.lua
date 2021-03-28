@@ -8,6 +8,7 @@
 Bird = Class {}
 
 local GRAVITY = 20
+local JUMP_VELOCITY = 5
 
 function Bird:init()
     self.image = love.graphics.newImage('resources/images/bird.png')
@@ -21,7 +22,14 @@ function Bird:init()
 end
 
 function Bird:update(dt)
+    -- apply gravity each frame to the bird
     self.dy = self.dy + GRAVITY * dt
+
+    if love.keyboard.wasPressed('space') then
+        self.dy = -JUMP_VELOCITY
+    end
+
+    -- apply current velocity to y position
     self.y = self.y + self.dy
 end
 
