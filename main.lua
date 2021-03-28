@@ -19,6 +19,7 @@ push = require 'lib/push'
 Class = require 'lib/class'
 
 require 'Bird'
+require 'Pipe'
 
 WINDOW_WIDTH = 1280
 WINDOW_HEIGHT = 720
@@ -40,10 +41,20 @@ local BACKGROUND_LOOPING_POINT = 413
 
 local bird = Bird()
 
+-- pipes storage table
+local pipes = {}
+
+-- delay between pipes spawns
+local PIPE_SPAWN_COOLDOWN = 2
+local pipeSpawnTimer = 0
+
 function love.load()
     -- init nearest neighbour filter
     love.graphics.setDefaultFilter('nearest', 'nearest')
     love.window.setTitle('Fifty Bird')
+
+    -- seed random
+    math.randomseed(os.time())
 
     -- init virtual resolution
     push:setupScreen(VIRTUAL_WIDTH, VIRTUAL_HEIGHT, WINDOW_WIDTH, WINDOW_HEIGHT, {
@@ -64,7 +75,24 @@ function love.update(dt)
     backgroundScroll = (backgroundScroll + BACKGROUND_SCROLL_SPEED * dt) % BACKGROUND_LOOPING_POINT
     groundScroll = (groundScroll + GROUND_SCROLL_SPEED * dt) % VIRTUAL_WIDTH
 
+    pipeSpawnTimer = pipeSpawnTimer + dt
+
+    if pipeSpawnTimer > 2 then
+        -- add pipe to pipes storage
+        table.insert(pipes, Pipe())
+        -- reset timer to avoid spawning pipes every frame
+        pipeSpawnTimer = 0
+    end
+
     bird:update(dt)
+
+    for k, pipe in pairs(pipes) do
+        pipe:update(dt)
+
+        if pipe.x < -pipe.width then
+            table.remove(pipes, k)
+        end
+    end
 
     -- reset keysPressed table each frame so
     -- it only stores keys pressed on the current frame
@@ -88,6 +116,12 @@ end
 function love.draw()
     push:start()
     love.graphics.draw(background, -backgroundScroll, 0)
+
+    -- draw pipes before ground so it looks like to come from it
+    for k, pipe in pairs(pipes) do
+        pipe:draw()
+    end
+
     love.graphics.draw(ground, -groundScroll, VIRTUAL_HEIGHT - 16)
 
     bird:draw()
