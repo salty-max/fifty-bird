@@ -13,8 +13,8 @@ local JUMP_VELOCITY = 5
 function Bird:init()
     -- load bird sprite from disk and assign its width and height
     self.image = love.graphics.newImage('resources/images/bird.png')
-    self.width = self.image:getWidth()
-    self.height = self.image:getHeight()
+    self.width = BIRD_WIDTH
+    self.height = BIRD_HEIGHT
 
     -- position bird in the middle of the screen
     self.x = VIRTUAL_WIDTH / 2 - (self.width / 2)
