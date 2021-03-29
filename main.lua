@@ -28,9 +28,6 @@ WINDOW_HEIGHT = 720
 VIRTUAL_WIDTH = 512
 VIRTUAL_HEIGHT = 288
 
-BIRD_WIDTH = 38
-BIRD_HEIGHT = 24
-
 -- images loaded into memory
 local background = love.graphics.newImage('resources/images/background.png')
 local backgroundScroll = 0
@@ -56,6 +53,9 @@ local pipeSpawnTimer = 0
 -- init the last recorded Y value for a gap placement
 local lastY = -PIPE_HEIGHT + math.random(80) + 20
 
+-- scrolling variable to pause the game when the bird collides with a pipe
+local scrolling = true
+
 function love.load()
     -- init nearest neighbour filter
     love.graphics.setDefaultFilter('nearest', 'nearest')
@@ -79,35 +79,45 @@ function love.resize(w, h)
 end
 
 function love.update(dt)
-    -- scroll our background and ground, looping back to 0 after a certain amount
-    backgroundScroll = (backgroundScroll + BACKGROUND_SCROLL_SPEED * dt) % BACKGROUND_LOOPING_POINT
-    groundScroll = (groundScroll + GROUND_SCROLL_SPEED * dt) % VIRTUAL_WIDTH
+    if scrolling then
+        -- scroll our background and ground, looping back to 0 after a certain amount
+        backgroundScroll = (backgroundScroll + BACKGROUND_SCROLL_SPEED * dt) % BACKGROUND_LOOPING_POINT
+        groundScroll = (groundScroll + GROUND_SCROLL_SPEED * dt) % VIRTUAL_WIDTH
 
-    pipeSpawnTimer = pipeSpawnTimer + dt
+        pipeSpawnTimer = pipeSpawnTimer + dt
 
-    if pipeSpawnTimer > 2 then
-        -- modify the last Y coordinate so pipe gaps aren't too far away,
-        -- no higher than 10 pixels below the top edge of the screen,
-        -- and no lower than a gap length from the bottom
-        local y = math.max(-PIPE_HEIGHT + 10,
-                      math.min(lastY + math.random(-20, 20), VIRTUAL_HEIGHT - GAP_HEIGHT - PIPE_HEIGHT))
-        lastY = y
-        -- add pipe to pipes storage
-        table.insert(pipePairs, PipePair(y))
-        -- reset timer to avoid spawning pipes every frame
-        pipeSpawnTimer = 0
-    end
+        if pipeSpawnTimer > 2 then
+            -- modify the last Y coordinate so pipe gaps aren't too far away,
+            -- no higher than 10 pixels below the top edge of the screen,
+            -- and no lower than a gap length from the bottom
+            local y = math.max(-PIPE_HEIGHT + 10,
+                        math.min(lastY + math.random(-20, 20), VIRTUAL_HEIGHT - GAP_HEIGHT - PIPE_HEIGHT))
+            lastY = y
+            -- add pipe to pipes storage
+            table.insert(pipePairs, PipePair(y))
+            -- reset timer to avoid spawning pipes every frame
+            pipeSpawnTimer = 0
+        end
 
-    bird:update(dt)
+        bird:update(dt)
 
-    for k, pair in pairs(pipePairs) do
-        pair:update(dt)
-    end
+        for k, pair in pairs(pipePairs) do
+            pair:update(dt)
 
-    -- remove any flagged pipes
-    for k, pair in pairs(pipePairs) do
-        if pair.remove then
-            table.remove(pipePairs, k)
+            -- check to see if bird collided with a pipe
+            for l, pipe in pairs(pair.pipes) do
+                if bird:collides(pipe) then
+                    -- pause the game to show collision
+                    scrolling = false
+                end
+            end
+        end
+
+        -- remove any flagged pipes
+        for k, pair in pairs(pipePairs) do
+            if pair.remove then
+                table.remove(pipePairs, k)
+            end
         end
     end
 

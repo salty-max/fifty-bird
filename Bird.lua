@@ -10,6 +10,9 @@ Bird = Class {}
 local GRAVITY = 20
 local JUMP_VELOCITY = 5
 
+BIRD_WIDTH = 38
+BIRD_HEIGHT = 24
+
 function Bird:init()
     -- load bird sprite from disk and assign its width and height
     self.image = love.graphics.newImage('resources/images/bird.png')
@@ -22,6 +25,23 @@ function Bird:init()
 
     -- Y velocity; gravity
     self.dy = 0
+end
+
+--[[
+    AABB Collision Detection
+--]]
+function Bird:collides(pipe)
+    -- the 2-s are left and top offsets
+    -- the 4's are right and bottom offsets
+    -- both offsets are used to shrink the bounding box of the player
+    -- i.e. a little a bit a leeway with the collision
+    if (self.x + 2) + (self.width - 4) >= pipe.x and self.x + 2 <= pipe.x + PIPE_WIDTH then
+        if (self.y + 2) + (self.height - 4) >= pipe.y and self.y + 2 <= pipe.y + PIPE_HEIGHT then
+            return true
+        end
+    end
+
+    return false
 end
 
 function Bird:update(dt)
@@ -39,4 +59,6 @@ end
 
 function Bird:draw()
     love.graphics.draw(self.image, self.x, self.y)
+    -- Hitbox debug
+    --love.graphics.rectangle('line', self.x + 2, self.y + 2, self.width - 4, self.height - 4)
 end
