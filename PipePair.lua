@@ -1,9 +1,9 @@
 --[[
-  CS50G Project 1
-  Fifty bird (Flappy Bird remake)
-  Author: Maxime Blanc
-  https://github.com/salty-max
-  PIPE PAIR CLASS
+    PIPE PAIR CLASS
+    CS50G Project 1
+    Fifty bird (Flappy Bird remake)
+    Author: Maxime Blanc
+    https://github.com/salty-max
 --]]
 PipePair = Class {}
 

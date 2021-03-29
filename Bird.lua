@@ -1,17 +1,14 @@
 --[[
-  CS50G Project 1
-  Fifty bird (Flappy Bird remake)
-  Author: Maxime Blanc
-  https://github.com/salty-max
-  BIRD CLASS
+    BIRD CLASS
+    CS50G Project 1
+    Fifty bird (Flappy Bird remake)
+    Author: Maxime Blanc
+    https://github.com/salty-max
 --]]
 Bird = Class {}
 
 local GRAVITY = 20
 local JUMP_VELOCITY = 5
-
-BIRD_WIDTH = 38
-BIRD_HEIGHT = 24
 
 function Bird:init()
     -- load bird sprite from disk and assign its width and height

@@ -1,18 +1,13 @@
 --[[
-  CS50G Project 1
-  Fifty bird (Flappy Bird remake)
-  Author: Maxime Blanc
-  https://github.com/salty-max
-  PIPE CLASS
+    PIPE CLASS
+    CS50G Project 1
+    Fifty bird (Flappy Bird remake)
+    Author: Maxime Blanc
+    https://github.com/salty-max
 --]]
 Pipe = Class {}
 
 local PIPE_IMAGE = love.graphics.newImage('resources/images/pipe.png')
-
-PIPE_SPEED = 60
-
-PIPE_WIDTH = 70
-PIPE_HEIGHT = 288
 
 function Pipe:init(orientation, y)
     self.x = VIRTUAL_WIDTH
