@@ -46,7 +46,7 @@ function Bird:update(dt)
     self.dy = self.dy + GRAVITY * dt
 
     -- apply anti-gravity by setting dy to a negative value
-    if love.keyboard.wasPressed('space') then
+    if love.keyboard.wasPressed('space') or love.mouse.wasClicked(1) then
         self.dy = -JUMP_VELOCITY
         sounds['jump']:play()
     end

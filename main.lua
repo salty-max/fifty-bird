@@ -98,8 +98,9 @@ function love.load()
     }
     gStateMachine:change('title')
 
-    -- initialize input table
+    -- initialize input tables
     love.keyboard.keysPressed = {}
+    love.mouse.buttonsClicked = {}
 end
 
 function love.resize(w, h)
@@ -114,9 +115,10 @@ function love.update(dt)
     -- update the state machine, which defers to the right state
     gStateMachine:update(dt)
 
-    -- reset keysPressed table each frame so
-    -- it only stores keys pressed on the current frame
+    -- reset keysPressed and mousePressed tables each frame so
+    -- it only stores keys and buttons pressed on the current frame
     love.keyboard.keysPressed = {}
+    love.mouse.buttonsClicked = {}
 end
 
 function love.keypressed(key)
@@ -128,9 +130,18 @@ function love.keypressed(key)
     end
 end
 
+function love.mousepressed(x, y, button)
+    love.mouse.buttonsClicked[button] = true
+end
+
 function love.keyboard.wasPressed(key)
     -- Return whether a key has been pressed
     return love.keyboard.keysPressed[key]
+end
+
+function love.mouse.wasClicked(button)
+    -- Return whether a key has been pressed
+    return love.mouse.buttonsClicked[button]
 end
 
 function love.draw()
