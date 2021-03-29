@@ -48,6 +48,7 @@ function Bird:update(dt)
     -- apply anti-gravity by setting dy to a negative value
     if love.keyboard.wasPressed('space') then
         self.dy = -JUMP_VELOCITY
+        sounds['jump']:play()
     end
 
     -- apply current velocity to y position

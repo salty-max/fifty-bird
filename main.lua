@@ -67,6 +67,21 @@ function love.load()
     hugeFont = love.graphics.newFont('resources/fonts/flappy.ttf', 56)
     love.graphics.setFont(flappyFont)
 
+    -- initialize table of sounds
+    sounds = {
+        ['jump'] = love.audio.newSource('resources/sounds/jump.wav', 'static'),
+        ['explosion'] = love.audio.newSource('resources/sounds/explosion.wav', 'static'),
+        ['hurt'] = love.audio.newSource('resources/sounds/hurt.wav', 'static'),
+        ['score'] = love.audio.newSource('resources/sounds/score.wav', 'static'),
+
+        -- https://freesound.org/people/xsgianni/sounds/388079/
+        ['music'] = love.audio.newSource('resources/sounds/marios_way.mp3', 'static')
+    }
+
+    -- kick off music
+    sounds['music']:setLooping(true)
+    sounds['music']:play()
+
     -- init virtual resolution
     push:setupScreen(VIRTUAL_WIDTH, VIRTUAL_HEIGHT, WINDOW_WIDTH, WINDOW_HEIGHT, {
         vsync = true,
