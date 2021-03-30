@@ -49,6 +49,8 @@ function PlayState:update(dt)
             table.insert(self.pipePairs, PipePair(y))
             -- reset timer to avoid spawning pipes every frame
             self.pipeSpawnTimer = 0
+            PIPE_SPAWN_COOLDOWN = math.random(2, 4)
+            GAP_HEIGHT = math.random(80, 100)
         end
 
         self.bird:update(dt)
